@@ -1,0 +1,107 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    android:padding="6dp" >
+
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:background="@drawable/mm_listitem"
+        android:gravity="center_vertical" >
+
+        <!-- android:clickable="true" -->
+
+        <ImageView
+            android:id="@+id/nearby_head"
+            android:layout_width="55dp"
+            android:layout_height="55dp"
+            android:layout_alignParentLeft="true"
+            android:layout_centerVertical="true"
+            android:paddingLeft="5dp"
+            android:src="@drawable/yxc" />
+
+        <TextView
+            android:id="@+id/nearby_username"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_toRightOf="@id/nearby_head"
+            android:layout_alignTop="@id/nearby_head"
+            android:paddingLeft="1dp"
+            android:text="Green Day"
+            android:textColor="#000" />
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:paddingRight="1dp" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="距离："
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/nearby_distance"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="200"
+                android:textColor="#000" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="米以内"
+                android:textColor="#000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:id="@+id/nearby_tel_block"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nearby_username"
+            android:layout_toRightOf="@id/nearby_head" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="1dp"
+                android:text="联系电话："
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/nearby_telnum"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="1dp"
+                android:text="18795858320"
+                android:textColor="#000" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/nearby_tel_block"
+            android:layout_toRightOf="@id/nearby_head" >
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="1dp"
+                android:text="目的地："
+                android:textColor="#000" />
+
+            <TextView
+                android:id="@+id/nearby_destination"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:paddingLeft="1dp"
+                android:text="东大西门"
+                android:textColor="#000" />
+        </LinearLayout>
+    </RelativeLayout>
+
+</LinearLayout>

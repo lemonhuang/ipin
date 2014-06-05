@@ -1,0 +1,155 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:orientation="vertical" >
+   
+    <LinearLayout
+        android:id="@+id/register_status"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:orientation="vertical"
+        android:visibility="gone" >
+
+        <ProgressBar
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp" />
+
+        <TextView
+            android:id="@+id/register_status_message"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="16dp"
+            android:fontFamily="sans-serif-light"
+            android:text="@string/login_progress_signing_in"
+            android:textAppearance="?android:attr/textAppearanceMedium" />
+    </LinearLayout>
+
+	<ScrollView
+	    android:id="@+id/Register_ScrollView"
+	    android:layout_width="fill_parent"
+	    android:layout_height="fill_parent" >
+
+	    <LinearLayout
+	        android:layout_width="match_parent"
+	        android:layout_height="wrap_content"
+	        android:gravity="center_horizontal"
+    		android:orientation="vertical"
+    		android:padding="16dp" >
+
+	        <EditText
+	            android:id="@+id/register_name"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:ems="10"
+	            android:hint="@string/register_name"
+	            android:maxLines="1"
+	            android:singleLine="true" >
+
+	            <requestFocus />
+	        </EditText>
+
+	        <EditText
+	            android:id="@+id/register_password"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:ems="10"
+	            android:hint="@string/register_password"
+	            android:inputType="textPassword"
+	            android:maxLines="1"
+	            android:singleLine="true" />
+
+	        <EditText
+	            android:id="@+id/register_password_confirm"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:ems="10"
+	            android:hint="@string/register_password_confirm"
+	            android:inputType="textPassword"
+	            android:maxLines="1"
+	            android:singleLine="true" />
+	        
+	        <EditText
+	            android:id="@+id/register_telephone"
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:ems="10"
+	            android:hint="@string/register_telephone"
+	            android:maxLines="1"
+	            android:maxLength="11"
+	            android:singleLine="true"
+	            android:inputType="phone" />
+	        
+	        <LinearLayout
+	            android:layout_width="match_parent"
+	            android:layout_height="wrap_content"
+	            android:layout_weight="1"
+	            android:orientation="horizontal">
+	            
+	            <TextView 
+	                android:layout_height="match_parent"
+	                android:layout_width="wrap_content"
+	                android:text="性别："
+	                android:textSize="9pt" />
+	            
+	            <RadioGroup 
+	                android:id="@+id/radio_sex"
+	                android:layout_width="wrap_content"
+	                android:layout_height="match_parent"
+	                android:orientation="horizontal">
+	                
+	                <RadioButton
+	                	android:id="@+id/radioButton_male"
+	                	android:layout_width="wrap_content"
+	                	android:layout_height="wrap_content"
+	                	android:text="男"
+	                	android:checked="true" />
+	            
+	            	<RadioButton
+	                	android:id="@+id/radioButton_female"
+	                	android:layout_width="wrap_content"
+	                	android:layout_height="wrap_content"
+	                	android:text="女" />
+	                
+	            </RadioGroup>           
+
+	        </LinearLayout>
+
+	        <Button
+	            android:id="@+id/register_confirm"
+	            android:layout_width="250dp"
+	            android:layout_height="wrap_content"
+	            android:layout_marginTop="20dp"
+	            android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+	            android:layout_weight="1"
+	            android:background="@drawable/btn_style_green"
+	            android:gravity="center"
+	            android:text="@string/register_confirm"
+	            android:textColor="#ffffff" />
+	        
+	        <Button
+	            android:id="@+id/register_cancel" 
+      			android:layout_width="250dp" 
+        		android:layout_height="wrap_content"
+        		android:layout_marginTop="20dp"
+        		android:paddingLeft="10dp"
+                android:paddingRight="10dp"
+	            android:layout_weight="1"
+	            android:background="@drawable/btn_style_red"
+	            android:gravity="center"  
+        		android:text="@string/register_cancel"
+        		android:textSize="18sp"		
+				android:textColor="#fff" />
+	    </LinearLayout>
+
+	</ScrollView>
+
+</LinearLayout>

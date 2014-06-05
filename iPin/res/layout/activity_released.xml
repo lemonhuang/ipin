@@ -1,0 +1,223 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/chat_bg_default" >
+
+    <RelativeLayout
+        android:id="@+id/rl_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/title_bar"
+        android:gravity="center_vertical" >
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/title_btn_back"
+            android:onClick="chat_back"
+            android:text="返回"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/tv_Name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="拼车信息详情"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/relativeLayout1"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/rl_layout"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp" >
+
+        <LinearLayout
+            android:id="@+id/linearLayout1"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginRight="14dp"
+            android:background="@drawable/chatfrom_bg"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="起点"
+                    android:textColor="#ff000000"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_From"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1.41"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="百家湖阿拉丁副ad'fa's'f科"
+                    android:textColor="#ff000000"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="终点"
+                    android:textColor="#ff000000"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_To"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="东大西门"
+                    android:textColor="#ff000000"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="日期"
+                    android:textColor="#ff000000"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_Date"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="5/30"
+                    android:textColor="#ff000000"
+                    android:textSize="18sp" />
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentLeft="true" >
+
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="详情"
+                    android:textColor="#ff000000"
+                    android:textSize="18sp" />
+
+                <TextView
+                    android:id="@+id/tv_Detail"
+                    android:layout_width="123dp"
+                    android:layout_height="wrap_content"
+                    android:layout_marginRight="10dp"
+                    android:layout_weight="1.41"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="有没有30晚去周董演唱会的哇，有像我这样想要拼车从百家湖回东大西门的同学可以相互联系下。。QQ1234567890"
+                    android:textColor="#ff000000"
+                    android:textSize="18sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <ImageView
+            android:id="@+id/released_HeadImage"
+            android:layout_width="65dp"
+            android:layout_height="65dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_marginTop="10dp"
+            android:src="@drawable/default_head" />
+
+        <TextView
+            android:id="@+id/released_username"
+            android:layout_width="65dp"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@+id/released_HeadImage"
+            android:gravity="center"
+            android:text="user"
+            android:textColor="#ff000000"
+            android:textSize="18sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/chat_footer_bg" >
+
+        <Button
+            android:id="@+id/btn_add"
+            android:layout_width="fill_parent"
+            android:layout_height="70dp"
+            android:layout_alignParentRight="true"
+            android:layout_centerVertical="true"
+            android:background="@drawable/chat_send_btn"
+            android:drawableLeft="@drawable/groups"
+            android:text="加入讨论组"
+            android:textColor="#000000"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

@@ -1,0 +1,240 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    android:background="@drawable/chat_bg_default" >
+
+    <RelativeLayout
+        android:id="@+id/rl_layout"
+        android:layout_width="fill_parent"
+        android:layout_height="45dp"
+        android:background="@drawable/title_bar"
+        android:gravity="center_vertical" >
+
+        <Button
+            android:id="@+id/btn_back"
+            android:layout_width="70dp"
+            android:layout_height="wrap_content"
+            android:layout_centerVertical="true"
+            android:background="@drawable/title_btn_back"
+            android:onClick="chat_back"
+            android:text="返回"
+            android:textColor="#fff"
+            android:textSize="14sp" />
+
+        <TextView
+            android:id="@+id/et_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_centerInParent="true"
+            android:text="拼车信息编辑与发布"
+            android:textColor="#ffffff"
+            android:textSize="20sp" />
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:id="@+id/rl_bottom"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:background="@drawable/chat_footer_bg" >
+
+        <Button
+            android:id="@+id/btn_send"
+            android:layout_width="60dp"
+            android:layout_height="40dp"
+            android:layout_alignParentRight="true"
+            android:layout_alignParentTop="true"
+            android:background="@drawable/chat_send_btn"
+            android:text="发送" />
+
+        <LinearLayout
+            android:layout_width="fill_parent"
+            android:layout_height="300dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:layout_toLeftOf="@id/btn_send"
+            android:orientation="vertical" >
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50dp" >
+
+                <TextView
+                    android:id="@+id/et_senddate1"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/chat_send_btn"
+                    android:gravity="center"
+                    android:text="日期"
+                    android:textColor="#000000" />
+
+                <EditText
+                    android:id="@+id/et_senddate"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/et_senddate1"
+                    android:background="@drawable/login_edit_normal"
+                    android:editable="false"
+                    android:gravity="left|top"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50dp" >
+
+                <TextView
+                    android:id="@+id/et_sendfrom1"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:layout_alignParentTop="true"
+                    android:background="@drawable/chat_send_btn"
+                    android:gravity="center"
+                    android:text="起点"
+                    android:textColor="#000000" />
+
+                <EditText
+                    android:id="@+id/et_sendfrom"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/et_sendfrom1"
+                    android:background="@drawable/login_edit_normal"
+                    android:gravity="left|top"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="50dp" >
+
+                <TextView
+                    android:id="@+id/et_sendto1"
+                    android:layout_width="60dp"
+                    android:layout_height="40dp"
+                    android:layout_alignParentLeft="true"
+                    android:background="@drawable/chat_send_btn"
+                    android:gravity="center"
+                    android:text="终点"
+                    android:textColor="#000000" />
+
+                <EditText
+                    android:id="@+id/et_sendto"
+                    android:layout_width="fill_parent"
+                    android:layout_height="40dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/et_sendto1"
+                    android:background="@drawable/login_edit_normal"
+                    android:gravity="left|top"
+                    android:singleLine="true"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+
+            <RelativeLayout
+                android:layout_width="fill_parent"
+                android:layout_height="150dp" >
+
+                <LinearLayout
+                    android:id="@+id/et_senddetail1"
+                    android:layout_width="60dp"
+                    android:layout_height="60dp"
+                    android:background="@drawable/chat_send_btn"
+                    android:gravity="center"
+                    android:orientation="vertical" >
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="具体"
+                        android:textColor="#000000" />
+
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:gravity="center"
+                        android:text="信息"
+                        android:textColor="#000000" />
+                </LinearLayout>
+
+                <EditText
+                    android:id="@+id/et_senddetail"
+                    android:layout_width="fill_parent"
+                    android:layout_height="140dp"
+                    android:layout_alignParentTop="true"
+                    android:layout_toRightOf="@id/et_senddetail1"
+                    android:background="@drawable/login_edit_normal"
+                    android:gravity="left|top"
+                    android:singleLine="false"
+                    android:textSize="18sp" />
+            </RelativeLayout>
+        </LinearLayout>
+    </RelativeLayout>
+
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@id/rl_bottom"
+        android:layout_below="@id/rl_layout"
+        android:layout_marginLeft="5dp"
+        android:layout_marginTop="5dp" >
+
+        <ImageView
+            android:id="@+id/iv_userhead"
+            android:layout_width="52dp"
+            android:layout_height="52dp"
+            android:layout_alignParentLeft="true"
+            android:layout_alignParentTop="true"
+            android:focusable="false"
+            android:src="@drawable/system_note" />
+
+        <LinearLayout
+            android:id="@+id/system_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentTop="true"
+            android:layout_toRightOf="@id/iv_userhead"
+            android:background="@drawable/chatfrom_bg"
+            android:orientation="vertical" >
+
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentBottom="true"
+                android:layout_alignParentRight="true" >
+
+                <TextView
+                    android:id="@+id/tv_Detail"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginLeft="10dp"
+                    android:clickable="true"
+                    android:focusable="true"
+                    android:gravity="left|top"
+                    android:lineSpacingExtra="2dp"
+                    android:text="请输入您的拼车需求，需要完整输入起点、终点、日期、具体细节，如果方便建议留下您的联系电话以便于车友联系到您"
+                    android:textColor="#ff000000"
+                    android:textSize="15sp" />
+            </LinearLayout>
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_name"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentLeft="true"
+            android:layout_below="@id/iv_userhead"
+            android:layout_toLeftOf="@id/system_content"
+            android:gravity="center"
+            android:textColor="#ff000000"
+            android:text="I拼提示"
+            android:textSize="12sp" />
+    </RelativeLayout>
+
+</RelativeLayout>

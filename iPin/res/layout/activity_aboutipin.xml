@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout  xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+  	android:layout_height="fill_parent"
+    android:background="#eee"
+    android:orientation="vertical" >           
+        <RelativeLayout 
+  			android:layout_width="fill_parent"
+  			android:layout_height="45dp"
+  			android:id="@+id/title" 
+  			android:background="@drawable/title_bar"
+  			android:gravity="center_vertical"  >
+  			<Button
+            	android:id="@+id/about_back"
+            	android:layout_width="70dp"
+            	android:layout_height="wrap_content"
+            	android:layout_centerVertical="true"
+            	android:text="返回"
+            	android:textSize="14sp"
+            	android:textColor="#fff"
+           		android:background="@drawable/title_btn_back"
+           		android:onClick="btn_back"/>  
+      		<TextView
+        		android:layout_width="wrap_content" 
+        		android:layout_height="wrap_content" 
+        		android:text="关于iPin"
+        		android:layout_centerInParent="true"
+        		android:textSize="20sp"		
+				android:textColor="#ffffff" />      
+		</RelativeLayout>
+		
+    <ScrollView
+    	android:layout_width="fill_parent"
+    	android:layout_height="fill_parent"
+    	android:scrollbarStyle="outsideOverlay"  >
+			
+		<LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:gravity="center_horizontal"
+            >
+
+        <RelativeLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="0dp" >
+
+            <ImageView
+                android:layout_width="150dp"
+                android:layout_height="150dp"
+                android:layout_centerHorizontal="true"
+                android:layout_centerVertical="true"
+                android:padding="8dp"
+                android:scaleType="centerInside"
+                android:src="@drawable/ipin_logo" />
+
+        </RelativeLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="3dp" >
+            
+            <RelativeLayout      				    
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"            	
+            	android:gravity="center_vertical"
+            	android:clickable="true"
+            	android:background="@drawable/preference_first_item" >
+      		  <TextView
+        			android:layout_width="wrap_content" 
+        			android:layout_height="wrap_content"
+        			android:layout_centerVertical="true"
+        			android:layout_centerHorizontal="true"
+        			android:padding="8dp" 
+        			android:text="关于iPin"
+        			android:textSize="17sp"		
+					android:textColor="#333" /> 	
+   		  	</RelativeLayout>
+			
+         	<RelativeLayout      				    
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"            	
+            	android:gravity="center_vertical"
+            	android:clickable="true"
+            	android:background="@drawable/preference_last_item" >      		  
+				<TextView				    
+        			android:layout_width="wrap_content" 
+        			android:layout_height="wrap_content"
+        			android:layout_centerVertical="true"
+        			android:padding="8dp" 
+        			android:text="iPin是一款基于用户地理位置进行结伴出行匹配的软件。同时，iPin还为所有成员提供了即时聊天功能，方便小组成员进行沟通和交流。"
+        			android:textSize="15sp"		
+					android:textColor="#000" /> 					
+   		  	</RelativeLayout>
+   		  	
+      		
+      	
+        </LinearLayout>
+        
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginTop="3dp" >
+            
+            <RelativeLayout      				    
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"            	
+            	android:gravity="center_vertical"
+            	android:clickable="true"
+            	android:background="@drawable/preference_first_item" >
+      		  <TextView
+        			android:layout_width="wrap_content" 
+        			android:layout_height="wrap_content"
+        			android:layout_centerVertical="true"
+        			android:layout_centerHorizontal="true"
+        			android:padding="8dp" 
+        			android:text="当前版本"
+        			android:textSize="17sp"		
+					android:textColor="#333" /> 	
+   		  	</RelativeLayout>
+			
+          	<RelativeLayout      				    
+            	android:layout_width="fill_parent"
+            	android:layout_height="wrap_content"            	
+            	android:gravity="center_vertical"
+            	android:clickable="true"
+            	android:background="@drawable/preference_last_item" >      		  
+				<TextView
+				    android:id="@+id/current_version"				    
+        			android:layout_width="wrap_content" 
+        			android:layout_height="wrap_content"
+        			android:layout_centerVertical="true"        			
+        			android:layout_centerHorizontal="true"
+        			android:padding="8dp" 
+        			android:text="2.0"
+        			android:textSize="15sp"		
+					android:textColor="#000" /> 					
+   		  	</RelativeLayout>
+   		  	
+      		
+      	
+        </LinearLayout>
+	</LinearLayout>
+  </ScrollView>
+</LinearLayout>

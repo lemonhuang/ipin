@@ -1,0 +1,10 @@
+<resources>
+
+    <string name="app_name">i拼</string>
+    <string name="Server_IP">203.195.201.242</string>
+	<string name="Server_Port">20000</string>
+	<string name="Server_MessagePort">20000</string>
+	<string name="HeadImageServer_Port">80</string>
+	<string name="HeadImageUploadFile">uploadFile.php</string>
+	<string name="Version">1.0</string>
+</resources>
