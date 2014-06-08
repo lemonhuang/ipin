@@ -64,6 +64,9 @@ public class SettingActivity extends Activity{
 	private RelativeLayout Advice = null;
 	private RelativeLayout SetPassword = null;
 	private RelativeLayout SetTelephone = null;
+	//add by hx
+	private RelativeLayout PostMgr = null;
+	//end
 	private RelativeLayout ClearMessage = null;
 	private Button logout = null;
 	private String username = null;
@@ -252,6 +255,19 @@ public class SettingActivity extends Activity{
 		        startActivity(intent);
 			}
 		});
+		
+		//add by hx
+		PostMgr = (RelativeLayout)findViewById(R.id.PostMgr);
+		PostMgr.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(SettingActivity.this,PostMgrActivity.class);
+		        startActivity(intent);
+			}
+		});
+		//end
 		
 		ClearMessage=(RelativeLayout)findViewById(R.id.clearMessage);
 		ClearMessage.setOnClickListener(new View.OnClickListener() {

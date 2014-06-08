@@ -19,7 +19,7 @@ import android.widget.ImageView;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-public class DiscussListViewAdapter extends BaseAdapter {
+public class PostListViewAdapter extends BaseAdapter {
 	private LayoutInflater mInflater = null;
 	private List<DiscussListMsgEntity> coll;
 	private Context ctx;
@@ -28,28 +28,30 @@ public class DiscussListViewAdapter extends BaseAdapter {
 	
 	public View getView(int position, View convertView, ViewGroup parent) {
 		DiscussListMsgEntity entity = coll.get(position);
-    		
+		
+		System.out.println("Now i'm in getView");
+		
     	ViewHolder viewHolder = null;	
 	    if (convertView == null)
 	    {
-	    	convertView = mInflater.inflate(R.layout.info_item_msg_text, null);
+	    	System.out.println("Now here convertview == null");
+	    	convertView = mInflater.inflate(R.layout.info_item_post_text, null);
 		    viewHolder = new ViewHolder();
 		    viewHolder.head = (ImageView) convertView.findViewById(R.id.head);
 		    //viewHolder.info_username = (TextView) convertView.findViewById(R.id.info_username);
 			viewHolder.info_from = (TextView) convertView.findViewById(R.id.info_from);
 			viewHolder.info_to = (TextView) convertView.findViewById(R.id.info_to);
-			viewHolder.info_date = (TextView) convertView.findViewById(R.id.info_date);	
-			viewHolder.memberCount = (TextView) convertView.findViewById(R.id.current_num);
+		//	viewHolder.info_date = (TextView) convertView.findViewById(R.id.info_date);	
+			viewHolder.member_lack = (TextView) convertView.findViewById(R.id.current_lack);
 			convertView.setTag(viewHolder);				  
 			
 			//viewHolder.info_username.setText(entity.getUsername());
 			viewHolder.info_from.setText(entity.getFrom());
 			viewHolder.info_to.setText(entity.getTo());
-			viewHolder.info_date.setText(entity.getDate());
-			
-			
-			
-			viewHolder.memberCount.setText(entity.getMemberCount());
+	//		viewHolder.info_date.setText(entity.getDate());
+			System.out.println("view: the memberCount is "+ entity.getMemberCount());
+			int temp = 4-Integer.parseInt(entity.getMemberCount());
+			viewHolder.member_lack.setText(""+temp);
 			if(headImg.containsKey(entity.getID()+"_"+entity.getHeadImageVersion()))
 			{
 				viewHolder.head.setImageBitmap(headImg.get(entity.getID()+"_"+entity.getHeadImageVersion()));
@@ -70,17 +72,8 @@ public class DiscussListViewAdapter extends BaseAdapter {
 		        	viewHolder.head.setImageResource(R.drawable.default_head);
 			}
 	        
-	        if(flag!=null)
-			{
-				Arrays.sort(flag); //首先对数组排序
-				int result = Arrays.binarySearch(flag, position); //在数组中搜索是否含有position
-				if(result>=0)
-				{
-					convertView.setBackgroundColor(Color.CYAN);
-				}
-			}
-	        
 	    }else{
+	    	  System.out.println("Now here convertview != null");
 	          viewHolder = (ViewHolder) convertView.getTag();
 	          if(headImg.containsKey(entity.getID()+"_"+entity.getHeadImageVersion()))
 				{
@@ -105,12 +98,14 @@ public class DiscussListViewAdapter extends BaseAdapter {
 	          //viewHolder.info_username.setText(entity.getUsername());
 			  viewHolder.info_from.setText(entity.getFrom());
 			  viewHolder.info_to.setText(entity.getTo());
-			  viewHolder.info_date.setText(entity.getDate());
+			  int temp = 4-Integer.parseInt(entity.getMemberCount());
+			  viewHolder.member_lack.setText(""+temp);
+		//	  viewHolder.info_date.setText(entity.getDate());
 	    }
 		return convertView;
 	}	
 	
-	public DiscussListViewAdapter(Context context, List<DiscussListMsgEntity> coll, int []which, Map<String,Bitmap> img) {
+	public PostListViewAdapter(Context context, List<DiscussListMsgEntity> coll, int []which, Map<String,Bitmap> img) {
         ctx = context;
         this.coll = coll;
         flag = which;
@@ -141,8 +136,8 @@ public class DiscussListViewAdapter extends BaseAdapter {
         //public TextView info_username;
         public TextView info_from;
         public TextView info_to;
-        public TextView info_date;
-        public TextView memberCount;
+   //     public TextView info_date;
+        public TextView member_lack;
     }
 }
 
