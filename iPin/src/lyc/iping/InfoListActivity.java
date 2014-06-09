@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
+import java.net.SocketTimeoutException;
 import java.security.MessageDigest;
 import java.util.ArrayList;
 import java.util.Calendar;
@@ -38,11 +39,14 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.View.OnClickListener;
 import android.view.WindowManager;
+import android.widget.AbsListView;
+import android.widget.AbsListView.OnScrollListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -50,7 +54,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class InfoListActivity extends ListActivity {
+public class InfoListActivity extends ListActivity implements OnScrollListener{
 	/** Called when the activity is first created. */
 
 	// ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,
@@ -68,6 +72,8 @@ public class InfoListActivity extends ListActivity {
 
 	private ImageView img_refresh = null;
 
+	private ListView listview = null;
+	
 	private EditText searchText_from;
 	private EditText searchText_to;
 	private EditText searchText_date = null;
@@ -79,6 +85,10 @@ public class InfoListActivity extends ListActivity {
 	private InfoListMsgViewAdapter mAdapter = null;
 	private InfoRefreshTask mInfoRefreshTask = null;
 	private int really_out = 0;
+	
+	private int visibleLastIndex = 0; //最后的可视项索引
+	private int datasize = 38; //模拟数据集的条数
+	private int count = 0;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -92,7 +102,10 @@ public class InfoListActivity extends ListActivity {
 				WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN);
 		target = findViewById(R.id.img_address);
 		badge = new BadgeView(InfoListActivity.this, target);
+		
+		listview = getListView();
 		initView();
+		listview.setOnScrollListener(this);
 		img_refresh = (ImageView) findViewById(R.id.infolist_refresh);
 		img_refresh.setOnClickListener(new OnClickListener() {
 			@Override
@@ -399,35 +412,42 @@ public class InfoListActivity extends ListActivity {
 				socket = new Socket(getString(R.string.Server_IP),
 						Integer.parseInt(getString(R.string.Server_Port)));
 				out = new PrintWriter(socket.getOutputStream(), true);
-				out.print("InfoListRefresh");
+				out.print("InfoListRefresh "+count+" "+"10");
 				out.flush();
-				mDataArrays.clear();
+//				mDataArrays.clear();
 				InputStream br = socket.getInputStream();
 				
 				byte[] buffer = new byte[10240];
-				int readSize = br.read(buffer);
-				/*
+//				int readSize = br.read(buffer);
+				
 				//modify
 				int readSize = 0;
-				String InfoRefreshMsg = null;
+				String InfoRefreshMsg = "";
+				socket.setSoTimeout(500);
 				try 
 				{
 				    int now_size;
-					while((now_size = br.read(buffer))>0)
+					while((now_size = br.read(buffer)) != -1)
 				    {
+						System.out.println("now_size is "+now_size);
 						InfoRefreshMsg += new String(buffer, 0, now_size);
 				        readSize += now_size;
-				    }		
+				        System.out.println("now_size is "+now_size+" string: "+InfoRefreshMsg );
+				    }	
 				}
-				catch (Exception e)
+				catch (SocketTimeoutException e)
 				{
-				    e.printStackTrace();
+				    System.out.println("socket is out of time");
+				    br.close();
+				    socket.close();
+				    
 				}
-				*/
+				
 				//end
+				System.out.println("readSize is "+readSize);
 				
 				if (readSize > 0) {
-					String InfoRefreshMsg = new String(buffer, 0, readSize);					
+//					String InfoRefreshMsg = new String(buffer, 0, readSize);					
 					System.out.println(InfoRefreshMsg);
 					if (InfoRefreshMsg.contains("InfoRefreshNone"))
 						return false;
@@ -439,7 +459,8 @@ public class InfoListActivity extends ListActivity {
 							InfoListActivity.this, "iPin");
 					SQLiteDatabase db = dbHelper.getWritableDatabase();
 					db.delete("info", null, null);
-					
+					System.out.println("change the list0");
+					count = count + Integer.parseInt(temp[0]);
 					for (int i = 0; i < Integer.parseInt(temp[0]); i++) {
 						InfoListMsgEntity entity = new InfoListMsgEntity();
 						String Index, ID, HeadImageVersion, username, from, to, date, detail, time, memberCount, memberList;
@@ -481,9 +502,9 @@ public class InfoListActivity extends ListActivity {
 					}
 					db.close();
 					dbHelper.close();
-					socket.close();
+	//				socket.close();
 					
-	//				System.out.println("change the list");
+					System.out.println("change the list1");
 									
 					return true;
 				}
@@ -592,6 +613,45 @@ public class InfoListActivity extends ListActivity {
 			ActivityManager.getInstance().exit();
 		}
 		return true;
+	}
+	
+	/**
+	* 加载更多数据
+	*/
+	private void loadMoreData(){
+		int count = mAdapter.getCount();
+		count++;
+		//这里添加发送请求
+		mInfoRefreshTask = new InfoRefreshTask();
+		mInfoRefreshTask.execute((Void) null);
+	}
+
+	@Override
+	public void onScroll(AbsListView view, int firstVisibleItem,
+			int visibleItemCount, int totalItemCount) {
+		// TODO Auto-generated method stub
+		visibleLastIndex = firstVisibleItem + visibleItemCount - 1;
+		Log.e("========================= ","========================");
+		Log.e("firstVisibleItem = ",firstVisibleItem+"");
+		Log.e("visibleItemCount = ",visibleItemCount+"");
+		Log.e("totalItemCount = ",totalItemCount+"");
+		Log.e("========================= ","========================");
+		//如果所有的记录选项等于数据集的条数，则移除列表底部视图
+		if(totalItemCount == datasize+1){
+//			mListView_home.removeFooterView(mLoadMoreView);
+//			Toast.makeText(this, "数据全部加载完!", Toast.LENGTH_LONG).show();
+		}
+	}
+
+	@Override
+	public void onScrollStateChanged(AbsListView view, int scrollState) {
+		// TODO Auto-generated method stub
+		int itemsLastIndex = mAdapter.getCount()-1; //数据集最后一项的索引
+		int lastIndex = itemsLastIndex + 1;
+		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex - 1) {			
+				loadMoreData();
+				Toast.makeText(this, "到底了！", Toast.LENGTH_LONG).show();
+			}			
 	}
 
 }
