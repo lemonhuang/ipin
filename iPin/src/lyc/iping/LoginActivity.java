@@ -291,6 +291,9 @@ public class LoginActivity extends Activity {
 				values.put("telephone", loginMsg[3]);
 				values.put("HeadImageVersion", loginMsg[4]);
 				values.put("autoLogin", autoLogin.isChecked());
+				values.put("auth", loginMsg[5]);
+				values.put("StudentID", loginMsg[6]);
+				values.put("PersonID", loginMsg[7]);
 				db.update("LoginUser", values, "autoLogin=?",
 						new String[] { "0" });
 				db.close();

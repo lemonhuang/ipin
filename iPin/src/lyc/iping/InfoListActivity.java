@@ -78,6 +78,7 @@ public class InfoListActivity extends ListActivity {
 	private Map<String,Bitmap> headImage = null;
 	private InfoListMsgViewAdapter mAdapter = null;
 	private InfoRefreshTask mInfoRefreshTask = null;
+	private AuthRefreshTask mAuthRefreshTask = null;
 	private int really_out = 0;
 
 	public void onCreate(Bundle savedInstanceState) {
@@ -180,6 +181,8 @@ public class InfoListActivity extends ListActivity {
 		EditText filterEditText2 = (EditText) findViewById(R.id.searchText2);
 		EditText filterEditText3 = (EditText) findViewById(R.id.searchText3);
 		searchText_date = filterEditText3;
+		mAuthRefreshTask= new AuthRefreshTask();
+		mAuthRefreshTask.execute((Void) null);
 		mInfoRefreshTask = new InfoRefreshTask();
 		mInfoRefreshTask.execute((Void) null);
 		// Add Text Change Listener to EditText
@@ -312,6 +315,8 @@ public class InfoListActivity extends ListActivity {
 			badge.setBadgeMargin(0, 0);
 			badge.show();
 		}
+		
+		
 	}
 
 	@Override
@@ -513,6 +518,118 @@ public class InfoListActivity extends ListActivity {
 		}
 	}
 
+	public class AuthRefreshTask extends AsyncTask<Void, Void, Boolean> {
+		private Socket socket = null;
+		PrintWriter out = null;
+		String LoginMsg;
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String ID="";
+				DatabaseHelper dbHelper = new DatabaseHelper(InfoListActivity.this,
+						"iPin");
+				SQLiteDatabase db = dbHelper.getWritableDatabase();
+				Cursor cursor = db.query("LoginUser",
+						new String[] { "ID", "username", "password", "sex",
+								"telephone", "HeadImageVersion", "autoLogin","auth","StudentID","PersonID" },
+						"username<>?", new String[] { "null" }, null, null, null);
+				while (cursor.moveToNext()) {
+					ID = cursor.getString(cursor.getColumnIndex("ID"));					
+				}
+				socket = new Socket(getString(R.string.Server_IP),
+						Integer.parseInt(getString(R.string.Server_Port)));
+				out = new PrintWriter(socket.getOutputStream(), true);
+				out.print("AuthRefresh " + ID);
+				out.flush();
+				InputStream br = socket.getInputStream();
+				byte[] buffer = new byte[1024];
+				int readSize = br.read(buffer);
+				if (readSize > 0) {
+					LoginMsg = new String(buffer, 0, readSize);
+					socket.close();
+					// add by hx
+					// end
+					return LoginMsg.contains("AuthRefreshSuccess");
+				}
+			} catch (Exception e) {
+				return false;
+			}
+
+			// TODO: register the new account here.
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mAuthRefreshTask = null;
+			if (success) {
+				String[] loginMsg = LoginMsg.split(":");
+				DatabaseHelper dbHelper = new DatabaseHelper(
+						InfoListActivity.this, "iPin");
+				SQLiteDatabase db = dbHelper.getWritableDatabase();
+				ContentValues values = new ContentValues();				
+				values.put("auth", loginMsg[1]);
+				values.put("StudentID", loginMsg[2]);
+				values.put("PersonID", loginMsg[3]);
+				db.update("LoginUser", values, "username<>?",
+						new String[] { "null" });
+				db.close();
+				dbHelper.close();
+				
+				DatabaseHelper dbHelper2 = new DatabaseHelper(InfoListActivity.this, "iPin");
+				SQLiteDatabase db2 = dbHelper2.getWritableDatabase();
+				Cursor cursor = db2.query("LoginUser",
+						new String[] { "ID", "username", "password", "sex",
+								"telephone", "HeadImageVersion", "autoLogin","auth" },
+						"username<>?", new String[] { "null" }, null, null, null);
+				while (cursor.moveToNext()) {
+					int auth = cursor.getInt(cursor
+							.getColumnIndex("auth"));
+					switch(auth)
+					{
+					case 0:
+						Toast.makeText(InfoListActivity.this, "请在个人信息中进行认证",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 1:
+						Toast.makeText(InfoListActivity.this, "您的认证信息正在处理中",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 2:
+						Toast.makeText(InfoListActivity.this, "您输入的一卡通号不存在",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 3:
+						Toast.makeText(InfoListActivity.this, "您输入的一卡通号已绑定其他帐号",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 4:
+						Toast.makeText(InfoListActivity.this, "您的信息验证不通过，请重新申请验证",
+								Toast.LENGTH_SHORT).show();
+						break;
+					default:
+						break;
+					}
+				}
+				db2.close();
+				dbHelper2.close();
+			} else {
+				
+			}
+			try {
+				socket.close();
+			} catch (Exception e) {
+			}
+
+		}
+
+		@Override
+		protected void onCancelled() {
+			mAuthRefreshTask = null;			
+		}		
+	}
 	/*
 	 * //add by hx
 	 * 
