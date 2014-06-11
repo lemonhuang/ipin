@@ -527,6 +527,12 @@ public class SettingActivity extends Activity{
 			
 		}
 		
+		public void btn_back(View v) { // 标题栏 返回按钮
+			this.finish();
+		}
+
+		
+		
 		public void btn_infolist(View v) {  
 			Intent intent = new Intent (SettingActivity.this,InfoListActivity.class);				
 			startActivity(intent);

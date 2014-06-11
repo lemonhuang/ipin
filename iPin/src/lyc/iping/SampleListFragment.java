@@ -1,13 +1,16 @@
 package lyc.iping;
 
 import android.content.Context;  
+import android.content.Intent;
 import android.os.Bundle;  
 import android.support.v4.app.ListFragment;  
+import android.util.Log;
 import android.view.LayoutInflater;  
 import android.view.View;  
 import android.view.ViewGroup;  
 import android.widget.ArrayAdapter;  
 import android.widget.ImageView;  
+import android.widget.ListView;
 import android.widget.TextView;  
   
 /** 
@@ -22,10 +25,12 @@ public class SampleListFragment extends ListFragment {
   
     public void onActivityCreated(Bundle savedInstanceState) {  
         super.onActivityCreated(savedInstanceState);  
-        SampleAdapter adapter = new SampleAdapter(getActivity());  
-        for (int i = 0; i < 5; i++) {  
-            adapter.add(new SampleItem("Sample List", android.R.drawable.ic_menu_search));  
-        }  
+        SampleAdapter adapter = new SampleAdapter(getActivity());    
+            adapter.add(new SampleItem("我的信息", android.R.drawable.ic_menu_search));  
+            adapter.add(new SampleItem("我的拼车", android.R.drawable.ic_menu_search));  
+            adapter.add(new SampleItem("认证申请", android.R.drawable.ic_menu_search));  
+            adapter.add(new SampleItem("关于ipin", android.R.drawable.ic_menu_search));  
+            adapter.add(new SampleItem("建议反馈", android.R.drawable.ic_menu_search));   
         setListAdapter(adapter);  
     }  
   
@@ -57,5 +62,39 @@ public class SampleListFragment extends ListFragment {
         }  
   
     }  
+    
+    @Override  
+    public void onListItemClick(ListView l, View v, int position, long id) {  
+        super.onListItemClick(l, v, position, id);  
+        
+        if(position == 0)
+        {
+        	Intent intent = new Intent(getActivity(), SettingActivity.class);
+    		startActivity(intent);
+        }
+        
+        if(position == 1)
+        {
+        	Intent intent = new Intent(getActivity(), PostMgrActivity.class);
+    		startActivity(intent);
+        }
+        if(position == 2)
+        {
+        	Intent intent = new Intent(getActivity(), SetAuthActivity.class);
+    		startActivity(intent);
+        }
+        if(position == 3)
+        {
+        	Intent intent = new Intent(getActivity(), AboutActivity.class);
+    		startActivity(intent);
+        }
+        if(position == 4)
+        {
+        	Intent intent = new Intent(getActivity(), SetAdviceActivity.class);
+    		startActivity(intent);
+        }
+        
+    }
+    
 }  
 

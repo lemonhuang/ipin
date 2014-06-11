@@ -445,6 +445,7 @@ public class PostMgrActivity extends ListActivity {
 		}
 	}
 
+/*
 	@Override
 	public void onBackPressed() {
 		Intent intent = new Intent(PostMgrActivity.this, SettingActivity.class);
@@ -453,6 +454,10 @@ public class PostMgrActivity extends ListActivity {
 		this.finish();
 		// super.onBackPressed();
 
+	}
+*/
+	public void btn_back(View v) { // 标题栏 返回按钮
+		this.finish();
 	}
 
 	public void btn_infolist(View v) {
