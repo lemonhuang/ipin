@@ -1,6 +1,10 @@
 package lyc.iping;
 
 import java.io.IOException;
+//add sliding menu support by hx
+import android.support.v4.app.FragmentActivity; 
+import com.jeremyfeinstein.slidingmenu.lib.SlidingMenu;
+//end
 import java.io.InputStream;
 import java.io.PrintWriter;
 import java.net.Socket;
@@ -47,6 +51,7 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -54,7 +59,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class InfoListActivity extends ListActivity implements OnScrollListener{
+public class InfoListActivity extends FragmentActivity implements OnScrollListener{
 	/** Called when the activity is first created. */
 
 	// ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,
@@ -84,15 +89,29 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 	private Map<String,Bitmap> headImage = null;
 	private InfoListMsgViewAdapter mAdapter = null;
 	private InfoRefreshTask mInfoRefreshTask = null;
+	private AuthRefreshTask mAuthRefreshTask = null;
 	private int really_out = 0;
 	
 	private int visibleLastIndex = 0; //最后的可视项索引
 	private int datasize = 38; //模拟数据集的条数
 	private int count = 0;
+	
+	//add sliding menu support by hx
+	private SlidingMenu menu;
+	//end add
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+		
+		//add sliding menu by hx
+		setTitle("Attach");  
+       
+		//end add
+		
 		setContentView(R.layout.main_tab_info);
+		
+		initSlidingMenu(); 
+		
 		headImage = new HashMap<String,Bitmap>();
 		// 退出时清除所有Activity
 		ActivityManager.getInstance().addActivity(this);
@@ -103,9 +122,9 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		target = findViewById(R.id.img_address);
 		badge = new BadgeView(InfoListActivity.this, target);
 		
-		listview = getListView();
-		initView();
+		listview = (ListView)findViewById(R.id.listview1);
 		listview.setOnScrollListener(this);
+		initView();
 		img_refresh = (ImageView) findViewById(R.id.infolist_refresh);
 		img_refresh.setOnClickListener(new OnClickListener() {
 			@Override
@@ -129,9 +148,43 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 				showDialog();
 			}
 		});
+		listview.setOnItemClickListener(new AdapterView.OnItemClickListener(){		 
+	         @Override
+	         public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+	                 long arg3) {
+	             // TODO Auto-generated method stub
+	        	 Intent intent = new Intent(InfoListActivity.this,
+	     				ReleasedActivity.class);
+	     		intent.putExtra("position", position);
+	     		startActivity(intent);
+	     		InfoListActivity.this.finish();
+	            
+	         }
+	          
+	     });
 		
 	}
 
+	private void initSlidingMenu() {  
+        // 设置主界面视图  
+       // setContentView(R.layout.content_frame);  
+       // getSupportFragmentManager().beginTransaction().replace(R.id.content_frame, new SampleListFragment()).commit();  
+  
+        // 设置滑动菜单的属性值  
+        menu = new SlidingMenu(this); 
+        menu.setMode(SlidingMenu.LEFT);
+        menu.setTouchModeAbove(SlidingMenu.TOUCHMODE_FULLSCREEN);  
+        menu.setShadowWidthRes(R.dimen.shadow_width);  
+        menu.setShadowDrawable(R.drawable.shadow);  
+        menu.setBehindOffsetRes(R.dimen.slidingmenu_offset);  
+        menu.setFadeDegree(0.35f);  
+        menu.attachToActivity(this, SlidingMenu.SLIDING_CONTENT);  
+        // 设置滑动菜单的视图界面  
+        menu.setMenu(R.layout.menu_frame);    
+        getSupportFragmentManager().beginTransaction().replace(R.id.menu_frame, new SampleListFragment()).commit();  
+    }  
+	
+	
 	private void showDialog() {
 		Calendar c = Calendar.getInstance();
 		int year = c.get(Calendar.YEAR);
@@ -188,11 +241,13 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		 * entity.setTo("bbb"); entity.setDate("7/7"); mDataArrays.add(entity);
 		 */
 		mAdapter = new InfoListMsgViewAdapter(this, mDataArrays, headImage);
-		setListAdapter(mAdapter);
+		listview.setAdapter(mAdapter);
 		EditText filterEditText1 = (EditText) findViewById(R.id.editText1);
 		EditText filterEditText2 = (EditText) findViewById(R.id.searchText2);
 		EditText filterEditText3 = (EditText) findViewById(R.id.searchText3);
 		searchText_date = filterEditText3;
+		mAuthRefreshTask= new AuthRefreshTask();
+		mAuthRefreshTask.execute((Void) null);
 		mInfoRefreshTask = new InfoRefreshTask();
 		mInfoRefreshTask.execute((Void) null);
 		// Add Text Change Listener to EditText
@@ -325,6 +380,8 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 			badge.setBadgeMargin(0, 0);
 			badge.show();
 		}
+		
+		
 	}
 
 	@Override
@@ -390,16 +447,9 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		InfoListActivity.this.finish();
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
-		super.onListItemClick(l, v, position, id);
-		Intent intent = new Intent(InfoListActivity.this,
-				ReleasedActivity.class);
-		intent.putExtra("position", position);
-		startActivity(intent);
-		InfoListActivity.this.finish();
-	}
+	
+	
+	
 
 	public class InfoRefreshTask extends AsyncTask<Void, Void, Boolean> {
 		private Socket socket = null;
@@ -414,12 +464,12 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 				out = new PrintWriter(socket.getOutputStream(), true);
 				out.print("InfoListRefresh "+count+" "+"10");
 				out.flush();
-//				mDataArrays.clear();
+				mDataArrays.clear();
 				InputStream br = socket.getInputStream();
 				
 				byte[] buffer = new byte[10240];
-//				int readSize = br.read(buffer);
-				
+				int readSize = br.read(buffer);
+/*				
 				//modify
 				int readSize = 0;
 				String InfoRefreshMsg = "";
@@ -445,9 +495,9 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 				
 				//end
 				System.out.println("readSize is "+readSize);
-				
+*/
 				if (readSize > 0) {
-//					String InfoRefreshMsg = new String(buffer, 0, readSize);					
+					String InfoRefreshMsg = new String(buffer, 0, readSize);					
 					System.out.println(InfoRefreshMsg);
 					if (InfoRefreshMsg.contains("InfoRefreshNone"))
 						return false;
@@ -502,7 +552,7 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 					}
 					db.close();
 					dbHelper.close();
-	//				socket.close();
+					socket.close();
 					
 					System.out.println("change the list1");
 									
@@ -534,6 +584,118 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		}
 	}
 
+	public class AuthRefreshTask extends AsyncTask<Void, Void, Boolean> {
+		private Socket socket = null;
+		PrintWriter out = null;
+		String LoginMsg;
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+
+			try {
+				String ID="";
+				DatabaseHelper dbHelper = new DatabaseHelper(InfoListActivity.this,
+						"iPin");
+				SQLiteDatabase db = dbHelper.getWritableDatabase();
+				Cursor cursor = db.query("LoginUser",
+						new String[] { "ID", "username", "password", "sex",
+								"telephone", "HeadImageVersion", "autoLogin","auth","StudentID","PersonID" },
+						"username<>?", new String[] { "null" }, null, null, null);
+				while (cursor.moveToNext()) {
+					ID = cursor.getString(cursor.getColumnIndex("ID"));					
+				}
+				socket = new Socket(getString(R.string.Server_IP),
+						Integer.parseInt(getString(R.string.Server_Port)));
+				out = new PrintWriter(socket.getOutputStream(), true);
+				out.print("AuthRefresh " + ID);
+				out.flush();
+				InputStream br = socket.getInputStream();
+				byte[] buffer = new byte[1024];
+				int readSize = br.read(buffer);
+				if (readSize > 0) {
+					LoginMsg = new String(buffer, 0, readSize);
+					socket.close();
+					// add by hx
+					// end
+					return LoginMsg.contains("AuthRefreshSuccess");
+				}
+			} catch (Exception e) {
+				return false;
+			}
+
+			// TODO: register the new account here.
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mAuthRefreshTask = null;
+			if (success) {
+				String[] loginMsg = LoginMsg.split(":");
+				DatabaseHelper dbHelper = new DatabaseHelper(
+						InfoListActivity.this, "iPin");
+				SQLiteDatabase db = dbHelper.getWritableDatabase();
+				ContentValues values = new ContentValues();				
+				values.put("auth", loginMsg[1]);
+				values.put("StudentID", loginMsg[2]);
+				values.put("PersonID", loginMsg[3]);
+				db.update("LoginUser", values, "username<>?",
+						new String[] { "null" });
+				db.close();
+				dbHelper.close();
+				
+				DatabaseHelper dbHelper2 = new DatabaseHelper(InfoListActivity.this, "iPin");
+				SQLiteDatabase db2 = dbHelper2.getWritableDatabase();
+				Cursor cursor = db2.query("LoginUser",
+						new String[] { "ID", "username", "password", "sex",
+								"telephone", "HeadImageVersion", "autoLogin","auth" },
+						"username<>?", new String[] { "null" }, null, null, null);
+				while (cursor.moveToNext()) {
+					int auth = cursor.getInt(cursor
+							.getColumnIndex("auth"));
+					switch(auth)
+					{
+					case 0:
+						Toast.makeText(InfoListActivity.this, "请在个人信息中进行认证",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 1:
+						Toast.makeText(InfoListActivity.this, "您的认证信息正在处理中",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 2:
+						Toast.makeText(InfoListActivity.this, "您输入的一卡通号不存在",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 3:
+						Toast.makeText(InfoListActivity.this, "您输入的一卡通号已绑定其他帐号",
+								Toast.LENGTH_SHORT).show();
+						break;
+					case 4:
+						Toast.makeText(InfoListActivity.this, "您的信息验证不通过，请重新申请验证",
+								Toast.LENGTH_SHORT).show();
+						break;
+					default:
+						break;
+					}
+				}
+				db2.close();
+				dbHelper2.close();
+			} else {
+				
+			}
+			try {
+				socket.close();
+			} catch (Exception e) {
+			}
+
+		}
+
+		@Override
+		protected void onCancelled() {
+			mAuthRefreshTask = null;			
+		}		
+	}
 	/*
 	 * //add by hx
 	 * 
@@ -653,5 +815,7 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 				Toast.makeText(this, "到底了！", Toast.LENGTH_LONG).show();
 			}			
 	}
+	
+	
 
 }

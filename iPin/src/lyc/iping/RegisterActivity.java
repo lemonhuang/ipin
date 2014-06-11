@@ -219,6 +219,9 @@ public class RegisterActivity extends Activity {
 				values.put("telephone", register_telephone_str);
 				values.put("HeadImageVersion", 0);
 				values.put("autoLogin", false);
+				values.put("auth",0);
+				values.put("StudentID", "NULL");
+				values.put("PersonID", "NULL");
 				db.update("LoginUser", values, "autoLogin=?",
 						new String[] { "0" });
 				db.close();
