@@ -464,7 +464,7 @@ public class InfoListActivity extends FragmentActivity implements OnScrollListen
 				out = new PrintWriter(socket.getOutputStream(), true);
 				out.print("InfoListRefresh "+count+" "+"10");
 				out.flush();
-				mDataArrays.clear();
+//				mDataArrays.clear();
 				InputStream br = socket.getInputStream();
 				
 				byte[] buffer = new byte[10240];
