@@ -28,7 +28,7 @@ public class DatabaseHelper extends SQLiteOpenHelper{
 	@Override
 	public void onCreate(SQLiteDatabase db) {
 		// TODO Auto-generated method stub
-		db.execSQL("create table LoginUser(ID varchar(9),username varchar(20),password varchar(32),sex varchar(10),telephone varchar(11),HeadImageVersion int(5),autoLogin boolean)");
+		db.execSQL("create table LoginUser(ID varchar(9),username varchar(20),password varchar(32),sex varchar(10),telephone varchar(11),HeadImageVersion int(5),autoLogin boolean,auth int(1),StudentID varchar(9),PersonID varchar(6))");
 		db.execSQL("create table info(GroupID varchar(9),info_ID varchar(9),info_HeadImageVersion int(5),info_username varchar(20),info_from varchar(20)," +
 				"info_to varchar(20),info_date varchar(20),info_detail nvarchar(300),info_time varchar(20),memberCount varchar(1),memberList varchar(70))");
 		db.execSQL("create table NearBy(info_ID varchar(9),info_HeadImageVersion int(5),info_username varchar(20),info_telnum varchar(11),info_distance varchar(5),info_destination varchar(20))");

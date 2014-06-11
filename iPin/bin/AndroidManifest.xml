@@ -69,6 +69,7 @@
         <activity android:name="lyc.iping.SetTelephoneActivity" android:theme="@style/Anim_style2" />       
         <activity android:name="lyc.iping.SetAdviceActivity" android:theme="@style/Anim_style2" />         
         <activity android:name="lyc.iping.AboutActivity" android:theme="@style/Anim_style2" />
+        <activity android:name="lyc.iping.SetAuthActivity" android:theme="@style/Anim_style2" />
         
         <service android:name="lyc.iping.service" />
         

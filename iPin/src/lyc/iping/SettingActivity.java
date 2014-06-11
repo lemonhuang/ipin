@@ -59,6 +59,7 @@ public class SettingActivity extends Activity{
 	private ImageView img_info = null;
 	private ImageView img_discuss = null;
 	private ImageView img_nearby = null;
+	private RelativeLayout SetAuth = null;
 	private RelativeLayout SetHeadImage = null;
 	private RelativeLayout AboutiPin = null;
 	private RelativeLayout Advice = null;
@@ -228,6 +229,18 @@ public class SettingActivity extends Activity{
 				// TODO Auto-generated method stub
 				//Toast.makeText(SettingActivity.this, "Click", Toast.LENGTH_SHORT).show();
 				Intent intent = new Intent(SettingActivity.this,SetAdviceActivity.class);
+		        startActivity(intent);
+			}
+		});
+		
+		SetAuth=(RelativeLayout)findViewById(R.id.SetAuth);
+		SetAuth.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//Toast.makeText(SettingActivity.this, "Click", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(SettingActivity.this,SetAuthActivity.class);
 		        startActivity(intent);
 			}
 		});
