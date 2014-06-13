@@ -1,15 +1,20 @@
 package lyc.iping;
 
+import android.app.ActionBar.LayoutParams;
 import android.content.Context;  
 import android.content.Intent;
+import android.database.Cursor;
+import android.database.sqlite.SQLiteDatabase;
 import android.os.Bundle;  
 import android.support.v4.app.ListFragment;  
 import android.util.Log;
 import android.view.LayoutInflater;  
 import android.view.View;  
 import android.view.ViewGroup;  
+import android.widget.AbsListView;
 import android.widget.ArrayAdapter;  
 import android.widget.ImageView;  
+import android.widget.LinearLayout;
 import android.widget.ListView;
 import android.widget.TextView;  
   
@@ -26,6 +31,22 @@ public class SampleListFragment extends ListFragment {
     public void onActivityCreated(Bundle savedInstanceState) {  
         super.onActivityCreated(savedInstanceState);  
         SampleAdapter adapter = new SampleAdapter(getActivity());    
+        	//读取数据库
+        	String username="";
+        	DatabaseHelper dbHelper = new DatabaseHelper(getActivity(),
+				"iPin");
+        	SQLiteDatabase db = dbHelper.getWritableDatabase();
+        	Cursor cursor = db.query("LoginUser",
+				new String[] { "ID", "username", "password", "sex",
+						"telephone", "HeadImageVersion", "autoLogin","auth","StudentID","PersonID" },
+				"username<>?", new String[] { "null" }, null, null, null);
+        	while (cursor.moveToNext()) {
+        		username = cursor.getString(cursor.getColumnIndex("username"));					
+        	}
+        	db.close();
+        	dbHelper.close();
+        	//end
+        	adapter.add(new SampleItem(username, R.drawable.default_head));  
             adapter.add(new SampleItem("我的信息", android.R.drawable.ic_menu_search));  
             adapter.add(new SampleItem("我的拼车", android.R.drawable.ic_menu_search));  
             adapter.add(new SampleItem("认证申请", android.R.drawable.ic_menu_search));  
@@ -53,11 +74,27 @@ public class SampleListFragment extends ListFragment {
             if (convertView == null) {  
                 convertView = LayoutInflater.from(getContext()).inflate(R.layout.row, null);  
             }  
-            ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);  
-            icon.setImageResource(getItem(position).iconRes);  
-            TextView title = (TextView) convertView.findViewById(R.id.row_title);  
-            title.setText(getItem(position).tag);  
-  
+            if(position == 0)
+            {     
+                AbsListView.LayoutParams lp = new AbsListView.LayoutParams(
+                        LinearLayout.LayoutParams.MATCH_PARENT, 100);
+                convertView.setLayoutParams(lp);
+                TextView title = (TextView) convertView.findViewById(R.id.row_title);  
+            	title.setText(getItem(position).tag); 
+            	ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);
+            	android.view.ViewGroup.LayoutParams para = icon.getLayoutParams();               
+                para.height = LayoutParams.MATCH_PARENT;  
+                para.width = 100;  
+                icon.setLayoutParams(para);              	  
+            	icon.setImageResource(getItem(position).iconRes);  
+            }
+            else
+            {
+            	ImageView icon = (ImageView) convertView.findViewById(R.id.row_icon);  
+            	icon.setImageResource(getItem(position).iconRes);  
+            	TextView title = (TextView) convertView.findViewById(R.id.row_title);  
+            	title.setText(getItem(position).tag);  
+            }
             return convertView;  
         }  
   

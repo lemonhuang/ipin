@@ -7,7 +7,7 @@
     <ImageView
         android:id="@+id/row_icon"
         android:layout_width="50dp"
-        android:layout_height="50dp"
+        android:layout_height="match_parent"
         android:padding="10dp"
         android:src="@drawable/ic_launcher" />
 
