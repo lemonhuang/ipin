@@ -47,6 +47,7 @@
         </LinearLayout>
 
         <LinearLayout
+            android:id="@+id/linearLayout3"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentBottom="true"
@@ -54,19 +55,12 @@
             android:paddingBottom="6dp" >
 
             <TextView
+                android:id="@+id/textView1"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:padding="1dp"
                 android:text="终点 "
                 android:textColor="#666" />
-
-            <TextView
-                android:id="@+id/info_to"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:padding="1dp"
-                android:text="东大西门"
-                android:textColor="#000" />
         </LinearLayout>
 
         <LinearLayout
@@ -101,6 +95,25 @@
                 android:textColor="#000" />
         </LinearLayout>
 
+        <TextView
+            android:id="@+id/info_date"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"
+            android:padding="1dp"
+            android:text="2010-01-01"
+            android:textColor="#000" />
+
+        <TextView
+            android:id="@+id/info_to"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignLeft="@+id/info_from"
+            android:layout_alignTop="@+id/linearLayout3"
+            android:padding="1dp"
+            android:text="东大西门"
+            android:textColor="#000" />
     </RelativeLayout>
 
 </LinearLayout>

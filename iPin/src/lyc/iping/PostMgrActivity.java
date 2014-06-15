@@ -75,8 +75,8 @@ public class PostMgrActivity extends ListActivity {
 	// add by hx
 		private int[] flag = new int[100];
 		private static String chat_groupid = null;
-		private String[] MgrChoice = new String[]{"减少1人","增加1人","完成拼车"};  
-		private boolean[] ChoiceState=new boolean[]{false, false, false};  
+		private String[] MgrChoice = new String[]{"减少1人","增加1人","取消拼车","完成拼车"};  
+		private boolean[] ChoiceState=new boolean[]{false, false,false, false};  
 		
 		private RadioOnClick radioOnClick = new RadioOnClick(1);
 		private ListView ChoiceRadioListView = null;
@@ -169,7 +169,6 @@ public class PostMgrActivity extends ListActivity {
 						  
 			setIndex(whichButton);  
 		    Toast.makeText(PostMgrActivity.this, "您已经选择了： " + index + ":" + MgrChoice[index]+ " 组号:" + ClickID, Toast.LENGTH_LONG).show();      
-	    
 		    //上报给服务器		    
 		    	//减少一人情况
 		    	if(index == 0)
@@ -211,29 +210,234 @@ public class PostMgrActivity extends ListActivity {
 				        }
 				    }).start();
 		    	}
+		    	else if(index == 2)
+		    	{
+
+		    		new AlertDialog.Builder(  
+                            PostMgrActivity.this)  
+                            .setTitle("您确定要执行:" + MgrChoice[index])  
+                            .setPositiveButton(  
+                                    "确定",  
+                                    new DialogInterface.OnClickListener() {              
+                                    	
+                                        public void onClick(  
+                                                DialogInterface dialog,  
+                                                int which) {  
+                                            // 这里是你点击确定之后可以进行的操作
+                                        	
+                                        	DatabaseHelper dbHelper = new DatabaseHelper(PostMgrActivity.this,
+                                 					"iPin");
+                                 			SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                        	String whereClause="GroupID=?";  
+                             	            String [] whereArgs = {String.valueOf(PostMgrActivity.this.ClickID)};    
+                             	            //调用delete方法，删除数据                                	           
+                             	            db.delete("discuss", whereClause, whereArgs); 
+                             	            
+                             	           Cursor cursor = db.query("discuss", new String[] { "GroupID", "info_ID",
+                             						"info_HeadImageVersion", "info_username", "info_from",
+                             						"info_to", "info_date", "info_detail",
+                             						"memberCount", "memberList" }, null, null, null, null, null);
+                             				HeadImageDownloader downloader = new HeadImageDownloader();
+                             				List<DiscussListMsgEntity> mDataArrays1 = new ArrayList<DiscussListMsgEntity>();
+                             				while (cursor.moveToNext()) {
+                             					DiscussListMsgEntity entity = new DiscussListMsgEntity();
+                             					String GroupID, ID, HeadImageVersion, username, from, to, date, detail, memberCount, memberList;
+                             					GroupID = cursor.getString(cursor.getColumnIndex("GroupID"));
+                             					ID = cursor.getString(cursor.getColumnIndex("info_ID"));
+                             					HeadImageVersion = cursor.getString(cursor.getColumnIndex("info_HeadImageVersion"));
+                             					username = cursor.getString(cursor.getColumnIndex("info_username"));
+                             					from = cursor.getString(cursor.getColumnIndex("info_from"));
+                             					to = cursor.getString(cursor.getColumnIndex("info_to"));
+                             					date = cursor.getString(cursor.getColumnIndex("info_date"));
+                             					detail = cursor.getString(cursor.getColumnIndex("info_detail"));
+                             					memberCount = cursor.getString(cursor.getColumnIndex("memberCount"));
+                             					memberList = cursor.getString(cursor.getColumnIndex("memberList"));
+                             					entity.setID(ID);
+                             					entity.setHeadImageVersion(HeadImageVersion);
+                             					entity.setUsername(username);
+                             					entity.setFrom(from);
+                             					entity.setTo(to);
+                             					entity.setDate(date);
+                             					entity.setMemberCount(memberCount);
+                             					mDataArrays1.add(entity);
+                             					downloader.download(PostMgrActivity.this, ID,
+                             							HeadImageVersion);
+                             					
+                             					System.out.println("The memberCount is "+ entity.getMemberCount());
+                             				}
+                             				db.close();
+                             				dbHelper.close();
+                             			        
+                             				mDataArrays.clear();
+                             				mDataArrays.addAll(mDataArrays1);
+                             				
+                             				
+                             				new Thread(new Runnable() {
+                             			        public void run() {
+                             			        	PostMgrActivity.this.runOnUiThread(new Runnable() {
+                             							@Override
+                             							public void run() {
+                             							// refresh UI 
+                             							mAdapter.notifyDataSetChanged();
+                             							}
+                             						});
+                             			        }
+                             			    }).start();
+                                        	                                     
+                                        	
+                                        	new Thread(new Runnable() {
+                        				        public void run() {
+                        				        	Socket mysocket = null;
+                        							PrintWriter myout = null;
+                        							try{
+                        					        	mysocket = new Socket(getString(R.string.Server_IP),
+                        										Integer.parseInt(getString(R.string.Server_Port)));
+                        							    myout = new PrintWriter(mysocket.getOutputStream(), true);
+                        							    myout.print("PostCameOver " + ClickID);
+                        							    myout.flush();
+                        						    	mysocket.close();
+                        						    	} catch(Exception e) {
+                        									 System.out.println("socket上报出错"+e);
+                        								}
+                        							
+                        							
+                        				        }
+                        				    }).start();
+                                        	
+                                        	
+                                        }  
+                                    })  
+                            .setNegativeButton(  
+                                    "取消",  
+                                    new DialogInterface.OnClickListener() {  
+
+                                        public void onClick(  
+                                                DialogInterface dialog,  
+                                                int which) {  
+                                            // 这里点击取消之后可以进行的操作   
+                                        	
+                                        }  
+                                    }).show(); 
+		    		
+		    	}
 		    	else
 		    	{
-		    		new Thread(new Runnable() {
-				        public void run() {
-				        	Socket mysocket = null;
-							PrintWriter myout = null;
-							try{
-					        	mysocket = new Socket(getString(R.string.Server_IP),
-										Integer.parseInt(getString(R.string.Server_Port)));
-							    myout = new PrintWriter(mysocket.getOutputStream(), true);
-							    myout.print("PostCameOver " + ClickID);
-							    myout.flush();
-						    	mysocket.close();
-						    	} catch(Exception e) {
-									 System.out.println("socket上报出错"+e);
-								}
-				        }
-				    }).start();
+		    		System.out.println("0 The clickID is "+PostMgrActivity.this.ClickID);
+		    		new AlertDialog.Builder(  
+                            PostMgrActivity.this)  
+                            .setTitle("您确定要执行:" + MgrChoice[index])  
+                            .setPositiveButton(  
+                                    "确定",  
+                                    new DialogInterface.OnClickListener() {  
+
+                                        public void onClick(  
+                                                DialogInterface dialog,  
+                                                int which) {  
+                                            // 这里是你点击确定之后可以进行的操作  
+                                        	System.out.println("The clickID is "+PostMgrActivity.this.ClickID);
+                                        	
+                                        	DatabaseHelper dbHelper = new DatabaseHelper(PostMgrActivity.this,
+                                 					"iPin");
+                                 			SQLiteDatabase db = dbHelper.getWritableDatabase();
+                                        	String whereClause="GroupID=?";  
+                             	            String [] whereArgs = {String.valueOf(PostMgrActivity.this.ClickID)};    
+                             	            //调用delete方法，删除数据                                	           
+                             	            db.delete("discuss", whereClause, whereArgs); 
+                             	           Cursor cursor = db.query("discuss", new String[] { "GroupID", "info_ID",
+                            						"info_HeadImageVersion", "info_username", "info_from",
+                            						"info_to", "info_date", "info_detail",
+                            						"memberCount", "memberList" }, null, null, null, null, null);
+                            				HeadImageDownloader downloader = new HeadImageDownloader();
+                            				List<DiscussListMsgEntity> mDataArrays1 = new ArrayList<DiscussListMsgEntity>();
+                            				while (cursor.moveToNext()) {
+                            					DiscussListMsgEntity entity = new DiscussListMsgEntity();
+                            					String GroupID, ID, HeadImageVersion, username, from, to, date, detail, memberCount, memberList;
+                            					GroupID = cursor.getString(cursor.getColumnIndex("GroupID"));
+                            					ID = cursor.getString(cursor.getColumnIndex("info_ID"));
+                            					HeadImageVersion = cursor.getString(cursor.getColumnIndex("info_HeadImageVersion"));
+                            					username = cursor.getString(cursor.getColumnIndex("info_username"));
+                            					from = cursor.getString(cursor.getColumnIndex("info_from"));
+                            					to = cursor.getString(cursor.getColumnIndex("info_to"));
+                            					date = cursor.getString(cursor.getColumnIndex("info_date"));
+                            					detail = cursor.getString(cursor.getColumnIndex("info_detail"));
+                            					memberCount = cursor.getString(cursor.getColumnIndex("memberCount"));
+                            					memberList = cursor.getString(cursor.getColumnIndex("memberList"));
+                            					entity.setID(ID);
+                            					entity.setHeadImageVersion(HeadImageVersion);
+                            					entity.setUsername(username);
+                            					entity.setFrom(from);
+                            					entity.setTo(to);
+                            					entity.setDate(date);
+                            					entity.setMemberCount(memberCount);
+                            					mDataArrays1.add(entity);
+                            					downloader.download(PostMgrActivity.this, ID,
+                            							HeadImageVersion);
+                            					
+                            					System.out.println("The memberCount is "+ entity.getMemberCount());
+                            				}
+                            				db.close();
+                            				dbHelper.close();
+                            			        
+                            				mDataArrays.clear();
+                            				mDataArrays.addAll(mDataArrays1);
+                            				
+                            				
+                            				new Thread(new Runnable() {
+                            			        public void run() {
+                            			        	PostMgrActivity.this.runOnUiThread(new Runnable() {
+                            							@Override
+                            							public void run() {
+                            							// refresh UI 
+                            							mAdapter.notifyDataSetChanged();
+                            							}
+                            						});
+                            			        }
+                            			    }).start();
+                                        	
+                                        	
+                                        	new Thread(new Runnable() {
+                        				        public void run() {
+                        				        	Socket mysocket = null;
+                        							PrintWriter myout = null;
+                        							try{
+                        					        	mysocket = new Socket(getString(R.string.Server_IP),
+                        										Integer.parseInt(getString(R.string.Server_Port)));
+                        							    myout = new PrintWriter(mysocket.getOutputStream(), true);
+                        							    myout.print("PostFinished " + ClickID);
+                        							    myout.flush();
+                        						    	mysocket.close();
+                        						    	} catch(Exception e) {
+                        									 System.out.println("socket上报出错"+e);
+                        								}
+                        							
+                        							
+                        				        }
+                        				    }).start();
+                                        	
+                                        	
+                                        	
+                                        }  
+                                    })  
+                            .setNegativeButton(  
+                                    "取消",  
+                                    new DialogInterface.OnClickListener() {  
+
+                                        public void onClick(  
+                                                DialogInterface dialog,  
+                                                int which) {  
+                                            // 这里点击取消之后可以进行的操作
+                                        	
+                                        }  
+                                    }).show(); 
 		    	}
 		    	
 		 
 		    dialog.dismiss();
 		       
+		    
+        	
+		    
+		    
 		    //更改本地的数据库
 		    DatabaseHelper dbHelper = new DatabaseHelper(PostMgrActivity.this,
 					"iPin");
@@ -286,10 +490,9 @@ public class PostMgrActivity extends ListActivity {
 			}
 			else
 			{
-				String whereClause="GroupID=?";  
-	            String [] whereArgs = {String.valueOf(ClickID)};    
-	            //调用delete方法，删除数据   
-	            db.delete("discuss", whereClause, whereArgs);  
+				      			
+         			            	
+				 
 			}
 			
 			
@@ -345,7 +548,7 @@ public class PostMgrActivity extends ListActivity {
 		        }
 		    }).start();
 						
-		    ClickID = null; 
+	//	    ClickID = null; 
 		    
 		  }  
 	} 

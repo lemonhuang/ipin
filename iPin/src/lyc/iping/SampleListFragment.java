@@ -46,12 +46,12 @@ public class SampleListFragment extends ListFragment {
         	db.close();
         	dbHelper.close();
         	//end
-        	adapter.add(new SampleItem(username, R.drawable.default_head));  
-            adapter.add(new SampleItem("我的信息", android.R.drawable.ic_menu_search));  
-            adapter.add(new SampleItem("我的拼车", android.R.drawable.ic_menu_search));  
-            adapter.add(new SampleItem("认证申请", android.R.drawable.ic_menu_search));  
-            adapter.add(new SampleItem("关于ipin", android.R.drawable.ic_menu_search));  
-            adapter.add(new SampleItem("建议反馈", android.R.drawable.ic_menu_search));   
+        	adapter.add(new SampleItem(username, R.drawable.portrait));  
+            adapter.add(new SampleItem("拼车管理", R.drawable.car));  
+            adapter.add(new SampleItem("认证申请", R.drawable.certification));  
+            adapter.add(new SampleItem("告诉朋友", R.drawable.share));  
+            adapter.add(new SampleItem("个人设置", R.drawable.settings));  
+        //    adapter.add(new SampleItem("建议反馈", android.R.drawable.ic_menu_search));   
         setListAdapter(adapter);  
     }  
   
@@ -104,7 +104,7 @@ public class SampleListFragment extends ListFragment {
     public void onListItemClick(ListView l, View v, int position, long id) {  
         super.onListItemClick(l, v, position, id);  
         
-        if(position == 0)
+        if(position == 4)
         {
         	Intent intent = new Intent(getActivity(), SettingActivity.class);
     		startActivity(intent);
@@ -125,11 +125,13 @@ public class SampleListFragment extends ListFragment {
         	Intent intent = new Intent(getActivity(), AboutActivity.class);
     		startActivity(intent);
         }
-        if(position == 4)
+        /*
+        if(position == 5)
         {
         	Intent intent = new Intent(getActivity(), SetAdviceActivity.class);
     		startActivity(intent);
         }
+        */
         
     }
     

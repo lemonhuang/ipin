@@ -41,14 +41,14 @@ public class PostListViewAdapter extends BaseAdapter {
 		    //viewHolder.info_username = (TextView) convertView.findViewById(R.id.info_username);
 			viewHolder.info_from = (TextView) convertView.findViewById(R.id.info_from);
 			viewHolder.info_to = (TextView) convertView.findViewById(R.id.info_to);
-		//	viewHolder.info_date = (TextView) convertView.findViewById(R.id.info_date);	
+			viewHolder.info_date = (TextView) convertView.findViewById(R.id.info_date);	
 			viewHolder.member_lack = (TextView) convertView.findViewById(R.id.current_lack);
 			convertView.setTag(viewHolder);				  
 			
 			//viewHolder.info_username.setText(entity.getUsername());
 			viewHolder.info_from.setText(entity.getFrom());
 			viewHolder.info_to.setText(entity.getTo());
-	//		viewHolder.info_date.setText(entity.getDate());
+			viewHolder.info_date.setText(entity.getDate());
 			System.out.println("view: the memberCount is "+ entity.getMemberCount());
 			int temp = 4-Integer.parseInt(entity.getMemberCount());
 			viewHolder.member_lack.setText(""+temp);
@@ -100,7 +100,7 @@ public class PostListViewAdapter extends BaseAdapter {
 			  viewHolder.info_to.setText(entity.getTo());
 			  int temp = 4-Integer.parseInt(entity.getMemberCount());
 			  viewHolder.member_lack.setText(""+temp);
-		//	  viewHolder.info_date.setText(entity.getDate());
+			  viewHolder.info_date.setText(entity.getDate());
 	    }
 		return convertView;
 	}	
@@ -136,7 +136,7 @@ public class PostListViewAdapter extends BaseAdapter {
         //public TextView info_username;
         public TextView info_from;
         public TextView info_to;
-   //     public TextView info_date;
+        public TextView info_date;
         public TextView member_lack;
     }
 }
