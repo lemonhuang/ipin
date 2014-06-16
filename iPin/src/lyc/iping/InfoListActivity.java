@@ -37,6 +37,7 @@ import android.graphics.drawable.LevelListDrawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
@@ -47,6 +48,8 @@ import android.view.View.OnClickListener;
 import android.view.WindowManager;
 import android.widget.AbsListView;
 import android.widget.AbsListView.OnScrollListener;
+import android.widget.AdapterView;
+import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -54,7 +57,7 @@ import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Toast;
 
-public class InfoListActivity extends ListActivity implements OnScrollListener{
+public class InfoListActivity extends Activity implements OnScrollListener,SwipeRefreshLayout.OnRefreshListener{
 	/** Called when the activity is first created. */
 
 	// ArrayList<HashMap<String, String>> list = new ArrayList<HashMap<String,
@@ -73,16 +76,21 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 	private ImageView img_refresh = null;
 
 	private ListView listview = null;
+	private View mLoadMoreView = null;
+	private Button mLoadMoreBtn = null;
 	
 	private EditText searchText_from;
 	private EditText searchText_to;
 	private EditText searchText_date = null;
+	private SwipeRefreshLayout swipeLayout = null;
+	
 	View target = null;
 	BadgeView badge = null;
 
 	private List<InfoListMsgEntity> mDataArrays = null;
 	private Map<String,Bitmap> headImage = null;
 	private InfoListMsgViewAdapter mAdapter = null;
+	private ReRefreshTask mReRefreshTask = null;
 	private InfoRefreshTask mInfoRefreshTask = null;
 	private int really_out = 0;
 	
@@ -103,7 +111,23 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		target = findViewById(R.id.img_address);
 		badge = new BadgeView(InfoListActivity.this, target);
 		
-		listview = getListView();
+		swipeLayout = (SwipeRefreshLayout)findViewById(R.id.swipe_container);
+		swipeLayout.setOnRefreshListener(this);
+		swipeLayout.setColorScheme(android.R.color.holo_blue_bright, android.R.color.holo_green_light,
+				android.R.color.holo_orange_light, android.R.color.holo_red_light);
+		
+		mLoadMoreView = getLayoutInflater().inflate(R.layout.loadmore, null);
+		mLoadMoreBtn = (Button)mLoadMoreView.findViewById(R.id.loadMoreButton);
+		mLoadMoreBtn.setOnClickListener(new View.OnClickListener() {
+			@Override
+			public void onClick(View v) {
+				mLoadMoreBtn.setText("正在加载中..."); //设置按钮文字
+				loadMoreData();
+//				swipeLayout.setRefreshing(true);
+			}
+		});
+		listview = (ListView) findViewById(R.id.info_list);
+		listview.addFooterView(mLoadMoreView);
 		initView();
 		listview.setOnScrollListener(this);
 		img_refresh = (ImageView) findViewById(R.id.infolist_refresh);
@@ -188,7 +212,20 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		 * entity.setTo("bbb"); entity.setDate("7/7"); mDataArrays.add(entity);
 		 */
 		mAdapter = new InfoListMsgViewAdapter(this, mDataArrays, headImage);
-		setListAdapter(mAdapter);
+		listview.setAdapter(mAdapter);
+		listview.setOnItemClickListener(new OnItemClickListener() {
+
+			@Override
+			public void onItemClick(AdapterView<?> arg0, View arg1, int position,
+					long arg3) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(InfoListActivity.this,
+						ReleasedActivity.class);
+				intent.putExtra("position", position);
+				startActivity(intent);
+				InfoListActivity.this.finish();
+			}
+		});
 		EditText filterEditText1 = (EditText) findViewById(R.id.editText1);
 		EditText filterEditText2 = (EditText) findViewById(R.id.searchText2);
 		EditText filterEditText3 = (EditText) findViewById(R.id.searchText3);
@@ -390,16 +427,16 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		InfoListActivity.this.finish();
 	}
 
-	@Override
-	protected void onListItemClick(ListView l, View v, int position, long id) {
-		// TODO Auto-generated method stub
-		super.onListItemClick(l, v, position, id);
-		Intent intent = new Intent(InfoListActivity.this,
-				ReleasedActivity.class);
-		intent.putExtra("position", position);
-		startActivity(intent);
-		InfoListActivity.this.finish();
-	}
+//	@Override
+//	protected void onListItemClick(ListView l, View v, int position, long id) {
+//		// TODO Auto-generated method stub
+//		super.onListItemClick(l, v, position, id);
+//		Intent intent = new Intent(InfoListActivity.this,
+//				ReleasedActivity.class);
+//		intent.putExtra("position", position);
+//		startActivity(intent);
+//		InfoListActivity.this.finish();
+//	}
 
 	public class InfoRefreshTask extends AsyncTask<Void, Void, Boolean> {
 		private Socket socket = null;
@@ -521,9 +558,11 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 			mInfoRefreshTask = null;
 			if (success) {
 				mAdapter.notifyDataSetChanged();
+				mLoadMoreBtn.setText("查看更多..."); //恢复按钮文字
 				System.out.println("change the list");
 			} else {
-
+				listview.removeFooterView(mLoadMoreView);
+				Toast.makeText(InfoListActivity.this, "没有更多数据了！", Toast.LENGTH_LONG).show();
 			}
 
 		}
@@ -638,7 +677,7 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		Log.e("========================= ","========================");
 		//如果所有的记录选项等于数据集的条数，则移除列表底部视图
 		if(totalItemCount == datasize+1){
-//			mListView_home.removeFooterView(mLoadMoreView);
+//			listview.removeFooterView(mLoadMoreView);
 //			Toast.makeText(this, "数据全部加载完!", Toast.LENGTH_LONG).show();
 		}
 	}
@@ -649,9 +688,154 @@ public class InfoListActivity extends ListActivity implements OnScrollListener{
 		int itemsLastIndex = mAdapter.getCount()-1; //数据集最后一项的索引
 		int lastIndex = itemsLastIndex + 1;
 		if (scrollState == OnScrollListener.SCROLL_STATE_IDLE && visibleLastIndex == lastIndex - 1) {			
-				loadMoreData();
-				Toast.makeText(this, "到底了！", Toast.LENGTH_LONG).show();
+//				loadMoreData();
+//				Toast.makeText(this, "到底了！", Toast.LENGTH_LONG).show();
 			}			
 	}
+
+	@Override
+	public void onRefresh() {
+		// TODO Auto-generated method stub
+		mReRefreshTask = new ReRefreshTask();
+		mReRefreshTask.execute((Void) null);
+		
+	}
+
+	public class ReRefreshTask extends AsyncTask<Void, Void, Boolean> {
+		private Socket socket = null;
+		PrintWriter out = null;
+
+		@Override
+		protected Boolean doInBackground(Void... params) {
+			// TODO: attempt authentication against a network service.
+			try {
+				socket = new Socket(getString(R.string.Server_IP),
+						Integer.parseInt(getString(R.string.Server_Port)));
+				out = new PrintWriter(socket.getOutputStream(), true);
+				out.print("InfoListRefresh "+0+" "+"10");
+				out.flush();
+				mDataArrays.clear();
+				InputStream br = socket.getInputStream();
+				
+				byte[] buffer = new byte[10240];
+//				int readSize = br.read(buffer);
+				
+				//modify
+				int readSize = 0;
+				String InfoRefreshMsg = "";
+				socket.setSoTimeout(500);
+				try 
+				{
+				    int now_size;
+					while((now_size = br.read(buffer)) != -1)
+				    {
+						System.out.println("now_size is "+now_size);
+						InfoRefreshMsg += new String(buffer, 0, now_size);
+				        readSize += now_size;
+				        System.out.println("now_size is "+now_size+" string: "+InfoRefreshMsg );
+				    }	
+				}
+				catch (SocketTimeoutException e)
+				{
+				    System.out.println("socket is out of time");
+				    br.close();
+				    socket.close();
+				    
+				}
+				
+				//end
+				System.out.println("readSize is "+readSize);
+				
+				if (readSize > 0) {
+//					String InfoRefreshMsg = new String(buffer, 0, readSize);					
+					System.out.println(InfoRefreshMsg);
+					if (InfoRefreshMsg.contains("InfoRefreshNone"))
+						return false;
+					String[] temp = InfoRefreshMsg.split("`");
+
+					HeadImageDownloader downloader = new HeadImageDownloader();
+
+					DatabaseHelper dbHelper = new DatabaseHelper(
+							InfoListActivity.this, "iPin");
+					SQLiteDatabase db = dbHelper.getWritableDatabase();
+					db.delete("info", null, null);
+					System.out.println("change the list0");
+					count = count + Integer.parseInt(temp[0]);
+					for (int i = 0; i < Integer.parseInt(temp[0]); i++) {
+						InfoListMsgEntity entity = new InfoListMsgEntity();
+						String Index, ID, HeadImageVersion, username, from, to, date, detail, time, memberCount, memberList;
+						Index = temp[i * 11 + 1];
+						ID = temp[i * 11 + 2];
+						HeadImageVersion = temp[i * 11 + 3];
+						username = temp[i * 11 + 4];
+						from = temp[i * 11 + 5];
+						to = temp[i * 11 + 6];
+						date = temp[i * 11 + 7];
+						detail = temp[i * 11 + 8];
+						time = temp[i * 11 + 9];
+						memberCount = temp[i * 11 + 10];
+						memberList = temp[i * 11 + 11];
+						entity.setID(ID);
+						entity.setHeadImageVersion(HeadImageVersion);
+						entity.setUsername(username);
+						entity.setFrom(from);
+						entity.setTo(to);
+						entity.setDate(date);
+						entity.setMemberCount(memberCount);
+						mDataArrays.add(entity);
+						ContentValues values = new ContentValues();
+						values.put("GroupID", Index);
+						values.put("info_ID", ID);
+						values.put("info_HeadImageVersion", HeadImageVersion);
+						values.put("info_username", username);
+						values.put("info_from", from);
+						values.put("info_to", to);
+						values.put("info_date", date);
+						values.put("info_detail", detail);
+						values.put("info_time", time);
+						values.put("memberCount", memberCount);
+						values.put("memberList", memberList);
+						db.insert("info", null, values);
+						downloader.download(InfoListActivity.this, ID,
+								HeadImageVersion);
+						System.out.println("change the list1 "+i+" "+temp[0]);
+					}
+					db.close();
+					dbHelper.close();
+	//				socket.close();
+					
+					System.out.println("change the list1");
+									
+					return true;
+				}
+			} catch (Exception e) {
+				return false;
+			}
+
+			// TODO: register the new account here.
+			return false;
+		}
+
+		@Override
+		protected void onPostExecute(final Boolean success) {
+			mReRefreshTask = null;
+			if (success) {
+				swipeLayout.setRefreshing(false);
+				mAdapter.notifyDataSetChanged();
+				mLoadMoreBtn.setText("查看更多..."); //恢复按钮文字
+				System.out.println("change the list");
+			} else {
+				listview.removeFooterView(mLoadMoreView);
+				Toast.makeText(InfoListActivity.this, "没有更多数据了！", Toast.LENGTH_LONG).show();
+			}
+
+		}
+
+		@Override
+		protected void onCancelled() {
+			mReRefreshTask = null;
+		}
+	}
+	
 
 }

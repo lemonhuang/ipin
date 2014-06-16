@@ -232,8 +232,8 @@
             android:layout_below="@id/iv_userhead"
             android:layout_toLeftOf="@id/system_content"
             android:gravity="center"
-            android:textColor="#ff000000"
             android:text="I拼提示"
+            android:textColor="#ff000000"
             android:textSize="12sp" />
     </RelativeLayout>
 
