@@ -59,11 +59,15 @@ public class SettingActivity extends Activity{
 	private ImageView img_info = null;
 	private ImageView img_discuss = null;
 	private ImageView img_nearby = null;
+	private RelativeLayout SetAuth = null;
 	private RelativeLayout SetHeadImage = null;
 	private RelativeLayout AboutiPin = null;
 	private RelativeLayout Advice = null;
 	private RelativeLayout SetPassword = null;
 	private RelativeLayout SetTelephone = null;
+	//add by hx
+	private RelativeLayout PostMgr = null;
+	//end
 	private RelativeLayout ClearMessage = null;
 	private Button logout = null;
 	private String username = null;
@@ -229,6 +233,18 @@ public class SettingActivity extends Activity{
 			}
 		});
 		
+		SetAuth=(RelativeLayout)findViewById(R.id.SetAuth);
+		SetAuth.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				//Toast.makeText(SettingActivity.this, "Click", Toast.LENGTH_SHORT).show();
+				Intent intent = new Intent(SettingActivity.this,SetAuthActivity.class);
+		        startActivity(intent);
+			}
+		});
+		
 		SetPassword=(RelativeLayout)findViewById(R.id.SetPassword);
 		SetPassword.setOnClickListener(new View.OnClickListener() {
 			
@@ -252,6 +268,19 @@ public class SettingActivity extends Activity{
 		        startActivity(intent);
 			}
 		});
+		
+		//add by hx
+		PostMgr = (RelativeLayout)findViewById(R.id.PostMgr);
+		PostMgr.setOnClickListener(new View.OnClickListener() {
+			
+			@Override
+			public void onClick(View v) {
+				// TODO Auto-generated method stub
+				Intent intent = new Intent(SettingActivity.this,PostMgrActivity.class);
+		        startActivity(intent);
+			}
+		});
+		//end
 		
 		ClearMessage=(RelativeLayout)findViewById(R.id.clearMessage);
 		ClearMessage.setOnClickListener(new View.OnClickListener() {
@@ -497,6 +526,12 @@ public class SettingActivity extends Activity{
 			//super.onBackPressed(); 
 			
 		}
+		
+		public void btn_back(View v) { // 标题栏 返回按钮
+			this.finish();
+		}
+
+		
 		
 		public void btn_infolist(View v) {  
 			Intent intent = new Intent (SettingActivity.this,InfoListActivity.class);				

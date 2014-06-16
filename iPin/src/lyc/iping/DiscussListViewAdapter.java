@@ -46,6 +46,9 @@ public class DiscussListViewAdapter extends BaseAdapter {
 			viewHolder.info_from.setText(entity.getFrom());
 			viewHolder.info_to.setText(entity.getTo());
 			viewHolder.info_date.setText(entity.getDate());
+			
+			
+			
 			viewHolder.memberCount.setText(entity.getMemberCount());
 			if(headImg.containsKey(entity.getID()+"_"+entity.getHeadImageVersion()))
 			{
