@@ -1,0 +1,13 @@
+<LinearLayout
+	xmlns:android="http://schemas.android.com/apk/res/android"
+	android:layout_width="fill_parent"
+	android:layout_height="fill_parent"
+	>
+	<Button
+		android:id="@+id/loadMoreButton"
+		android:layout_width="fill_parent"
+		android:layout_height="wrap_content"
+		android:background="@drawable/blrcorner_btn_background"
+		android:text="查看更多..." 
+		/>
+</LinearLayout>
