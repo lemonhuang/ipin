@@ -303,7 +303,7 @@ public class EditActivity extends Activity implements OnClickListener {
 		String year = String.valueOf(c.get(Calendar.YEAR));
 		String month = String.valueOf(c.get(Calendar.MONTH) + 1);
 		String day = String.valueOf(c.get(Calendar.DAY_OF_MONTH));
-		String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY) + 8);
+		String hour = String.valueOf(c.get(Calendar.HOUR_OF_DAY));
 		String mins = String.valueOf(c.get(Calendar.MINUTE));
 
 		StringBuffer sbBuffer = new StringBuffer();

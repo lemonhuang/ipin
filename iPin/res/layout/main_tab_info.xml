@@ -204,15 +204,20 @@
         </LinearLayout>
     </RelativeLayout>
 
+    <android.support.v4.widget.SwipeRefreshLayout
+    	android:id="@+id/swipe_container"
+    	android:layout_width="match_parent"
+    	android:layout_height="match_parent" 
+        android:layout_above="@id/main_bottom"
+        android:layout_below="@id/infotitle">
     <ListView
-        android:id="@+id/listview1"
+        android:id="@+id/info_list"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_above="@id/main_bottom"
-        android:layout_below="@id/infotitle"
         android:cacheColorHint="#0000"
         android:divider="@drawable/divider"
         android:dividerHeight="5dp"
+        android:scrollbars="vertical"
         android:scrollbarStyle="outsideOverlay" />
-
+	</android.support.v4.widget.SwipeRefreshLayout>
 </RelativeLayout>
