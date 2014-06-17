@@ -1,6 +1,6 @@
- *.class
- *.apk
- bin/
- gen/
- .settings/
- proguard/
+ iPin/*.class
+ iPin/*.apk
+ iPin/bin/
+ iPin/gen/
+ iPin/.settings/
+ iPin/proguard/
